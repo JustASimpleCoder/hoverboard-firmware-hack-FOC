@@ -1302,7 +1302,16 @@ void usart_process_sideboard(SerialSideboard *Sideboard_in, SerialSideboard *Sid
 {
   uint16_t checksum;
   if (Sideboard_in->start == SERIAL_START_FRAME) {
-    checksum = (uint16_t)(Sideboard_in->start ^ Sideboard_in->pitch ^ Sideboard_in->dPitch ^ Sideboard_in->cmd1 ^ Sideboard_in->cmd2 ^ Sideboard_in->sensors);
+    checksum = (uint16_t)(
+            Sideboard_in->start ^ 
+            Sideboard_in->cmd1 ^ Sideboard_in->cmd2 ^
+            Sideboard_in->pitch ^ Sideboard_in->dPitch ^
+            Sideboard_in->gyro_x ^ Sideboard_in->gyro_y ^ Sideboard_in->gyro_z ^
+            Sideboard_in->accel_x ^ Sideboard_in->accel_y ^ Sideboard_in->accel_z ^
+            Sideboard_in->quat_w ^ Sideboard_in->quat_x ^ Sideboard_in->quat_y ^ Sideboard_in->quat_z ^
+            Sideboard_in->euler_pitch ^ Sideboard_in->euler_roll ^ Sideboard_in->euler_yaw ^
+            Sideboard_in->temperature ^ Sideboard_in->sensors 
+    );
     if (Sideboard_in->checksum == checksum) {
       *Sideboard_out = *Sideboard_in;
       if (usart_idx == 2) {             // Sideboard USART2

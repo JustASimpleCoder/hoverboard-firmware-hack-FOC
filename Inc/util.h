@@ -62,11 +62,12 @@
       int16_t   quat_z;      // mpu.quat.z
       int16_t   euler_pitch; // mpu.euler.pitch
       int16_t   euler_roll;  // mpu.euler.roll
-      int16_t   euler_yaw;   // mpu.euler.yaw
-      int16_t   temperature; // mpu.temp
-      uint16_t  sensors;    // sensor status
+      int16_t   euler_yaw;  
+      int16_t   temperature; 
+      uint16_t  sensors;    
       uint16_t  checksum;
     } SerialSideboard;
+
 #endif
 
 // Input Structure

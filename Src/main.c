@@ -532,7 +532,6 @@ int main(void) {
         Feedback.batVoltage	    = (int16_t)batVoltageCalib;
         Feedback.boardTemp	    = (int16_t)board_temp_deg_c;
 
-
         Feedback.gyro_x           = (int16_t)Sideboard_L.gyro_x;
         Feedback.gyro_y           = (int16_t)Sideboard_L.gyro_y;
         Feedback.gyro_z           = (int16_t)Sideboard_L.gyro_z;
@@ -572,8 +571,8 @@ int main(void) {
                                            ^ Feedback.gyro_x  ^ Feedback.gyro_y ^ Feedback.gyro_z   
                                            ^ Feedback.accel_x ^ Feedback.accel_y ^  Feedback.accel_z 
                                            ^ Feedback.quat_w  ^ Feedback.quat_x ^  Feedback.quat_y ^ Feedback.quat_z      
-                                                ^ Feedback.euler_pitch ^ Feedback.euler_roll ^  Feedback.euler_yaw  
-                                                ^ Feedback.temperature ^ Feedback.sensors ^ Feedback.cmdLed
+                                           ^ Feedback.euler_pitch ^ Feedback.euler_roll ^  Feedback.euler_yaw  
+                                           ^ Feedback.temperature ^ Feedback.sensors ^ Feedback.cmdLed
                                           );
 
             HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&Feedback, sizeof(Feedback));
