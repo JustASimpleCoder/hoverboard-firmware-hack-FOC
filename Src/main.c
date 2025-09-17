@@ -125,10 +125,21 @@ typedef struct{
   int16_t   speedL_meas;
   int16_t   batVoltage;
   int16_t   boardTemp;
-  int16_t   pitch;
-  int16_t   dPitch;
-  int16_t   rc_channel_1;
-  int16_t   rc_channel_2;
+  int16_t   gyro_x;      // mpu.gyro.x
+  int16_t   gyro_y;      // mpu.gyro.y  
+  int16_t   gyro_z;      // mpu.gyro.z
+  int16_t   accel_x;     // mpu.accel.x
+  int16_t   accel_y;     // mpu.accel.y
+  int16_t   accel_z;     // mpu.accel.z
+  int16_t   quat_w;      // mpu.quat.w
+  int16_t   quat_x;      // mpu.quat.x
+  int16_t   quat_y;      // mpu.quat.y
+  int16_t   quat_z;      // mpu.quat.z
+  int16_t   euler_pitch; // mpu.euler.pitch
+  int16_t   euler_roll;  // mpu.euler.roll
+  int16_t   euler_yaw;   // mpu.euler.yaw
+  int16_t   temperature; // mpu.temp
+  uint16_t  sensors;    // sensor status
   uint16_t  cmdLed;
   uint16_t  checksum;
 } SerialFeedback;
@@ -521,16 +532,34 @@ int main(void) {
         Feedback.batVoltage	    = (int16_t)batVoltageCalib;
         Feedback.boardTemp	    = (int16_t)board_temp_deg_c;
 
-        Feedback.pitch          = (int16_t)Sideboard_L.pitch;
-        Feedback.dPitch         = (int16_t)Sideboard_L.dPitch;
-        Feedback.rc_channel_1   = (int16_t)Sideboard_L.cmd1;
-        Feedback.rc_channel_2   = (int16_t)Sideboard_L.cmd2;
+
+        Feedback.gyro_x           = (int16_t)Sideboard_L.gyro_x;
+        Feedback.gyro_y           = (int16_t)Sideboard_L.gyro_y;
+        Feedback.gyro_z           = (int16_t)Sideboard_L.gyro_z;
+        Feedback.accel_x          = (int16_t)Sideboard_L.accel_x;
+        Feedback.accel_y          = (int16_t)Sideboard_L.accel_y;
+        Feedback.accel_z          = (int16_t)Sideboard_L.accel_z;
+        Feedback.quat_w           = (int16_t)Sideboard_L.quat_w;
+        Feedback.quat_x           = (int16_t)Sideboard_L.quat_x;
+        Feedback.quat_y           = (int16_t)Sideboard_L.quat_y;
+        Feedback.quat_z           = (int16_t)Sideboard_L.quat_z;
+        Feedback.euler_pitch      = (int16_t)Sideboard_L.euler_pitch;
+        Feedback.euler_roll       = (int16_t)Sideboard_L.euler_roll;
+        Feedback.euler_yaw        = (int16_t)Sideboard_L.euler_yaw;
+        Feedback.temperature      = (int16_t)Sideboard_L.temperature;
+        Feedback.sensors          = (int16_t)Sideboard_L.sensors; 
+
 
         #if defined(FEEDBACK_SERIAL_USART2)
           if(__HAL_DMA_GET_COUNTER(huart2.hdmatx) == 0) {
             Feedback.cmdLed     = (uint16_t)sideboard_leds_L;
             Feedback.checksum   = (uint16_t)(Feedback.start ^ Feedback.cmd1 ^ Feedback.cmd2 ^ Feedback.speedR_meas ^ Feedback.speedL_meas 
-                                           ^ Feedback.batVoltage ^ Feedback.boardTemp ^ Feedback.cmdLed);
+                                           ^ Feedback.batVoltage ^ Feedback.boardTemp 
+                                           ^ Feedback.gyro_x  ^ Feedback.gyro_y ^ Feedback.gyro_z   
+                                           ^ Feedback.accel_x ^ Feedback.accel_y ^  Feedback.accel_z 
+                                           ^ Feedback.quat_w  ^ Feedback.quat_x ^  Feedback.quat_y ^ Feedback.quat_z      
+                                                ^ Feedback.euler_pitch ^ Feedback.euler_roll ^  Feedback.euler_yaw  
+                                                ^ Feedback.temperature ^ Feedback.sensors ^ Feedback.cmdLed);
 
             HAL_UART_Transmit_DMA(&huart2, (uint8_t *)&Feedback, sizeof(Feedback));
           }
@@ -539,8 +568,13 @@ int main(void) {
           if(__HAL_DMA_GET_COUNTER(huart3.hdmatx) == 0) {
             Feedback.cmdLed     = (uint16_t)sideboard_leds_R;
             Feedback.checksum   = (uint16_t)(Feedback.start ^ Feedback.cmd1 ^ Feedback.cmd2 ^ Feedback.speedR_meas ^ Feedback.speedL_meas 
-                                           ^ Feedback.batVoltage ^ Feedback.boardTemp ^ Feedback.cmdLed
-                                           ^ Feedback.pitch ^ Feedback.dPitch ^ Feedback.rc_channel_1 ^ Feedback.rc_channel_2);
+                                           ^ Feedback.batVoltage ^ Feedback.boardTemp 
+                                           ^ Feedback.gyro_x  ^ Feedback.gyro_y ^ Feedback.gyro_z   
+                                           ^ Feedback.accel_x ^ Feedback.accel_y ^  Feedback.accel_z 
+                                           ^ Feedback.quat_w  ^ Feedback.quat_x ^  Feedback.quat_y ^ Feedback.quat_z      
+                                                ^ Feedback.euler_pitch ^ Feedback.euler_roll ^  Feedback.euler_yaw  
+                                                ^ Feedback.temperature ^ Feedback.sensors ^ Feedback.cmdLed
+                                          );
 
             HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&Feedback, sizeof(Feedback));
           }

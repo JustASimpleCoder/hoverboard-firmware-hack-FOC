@@ -46,11 +46,25 @@
 #if defined(SIDEBOARD_SERIAL_USART2) || defined(SIDEBOARD_SERIAL_USART3)
     typedef struct{
       uint16_t  start;
-      int16_t   pitch;      // Angle
-      int16_t   dPitch;     // Angle derivative
-      int16_t   cmd1;       // RC Channel 1
-      int16_t   cmd2;       // RC Channel 2
-      uint16_t  sensors;    // RC Switches and Optical sideboard sensors
+      int16_t   cmd1;
+      int16_t   cmd2;
+      int16_t   pitch;
+      int16_t   dPitch;     
+      int16_t   gyro_x;      // mpu.gyro.x
+      int16_t   gyro_y;      // mpu.gyro.y  
+      int16_t   gyro_z;      // mpu.gyro.z
+      int16_t   accel_x;     // mpu.accel.x
+      int16_t   accel_y;     // mpu.accel.y
+      int16_t   accel_z;     // mpu.accel.z
+      int16_t   quat_w;      // mpu.quat.w
+      int16_t   quat_x;      // mpu.quat.x
+      int16_t   quat_y;      // mpu.quat.y
+      int16_t   quat_z;      // mpu.quat.z
+      int16_t   euler_pitch; // mpu.euler.pitch
+      int16_t   euler_roll;  // mpu.euler.roll
+      int16_t   euler_yaw;   // mpu.euler.yaw
+      int16_t   temperature; // mpu.temp
+      uint16_t  sensors;    // sensor status
       uint16_t  checksum;
     } SerialSideboard;
 #endif
