@@ -85,10 +85,10 @@ extern uint8_t enable;                  // global variable for motor enable
 extern int16_t batVoltage;              // global variable for battery voltage
 
 #if defined(SIDEBOARD_SERIAL_USART2)
-extern SerialSideboard Sideboard_L;
+extern SerialSideboardImuRaw Sideboard_L;
 #endif
 #if defined(SIDEBOARD_SERIAL_USART3)
-extern SerialSideboard Sideboard_R;
+extern SerialSideboardImuRaw Sideboard_R;
 #endif
 #if (defined(CONTROL_PPM_LEFT) && defined(DEBUG_SERIAL_USART3)) || (defined(CONTROL_PPM_RIGHT) && defined(DEBUG_SERIAL_USART2))
 extern volatile uint16_t ppm_captured_value[PPM_NUM_CHANNELS+1];

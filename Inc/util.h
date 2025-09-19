@@ -50,23 +50,23 @@
       int16_t   cmd2;
       int16_t   pitch;
       int16_t   dPitch;     
-      int16_t   gyro_x;      // mpu.gyro.x
-      int16_t   gyro_y;      // mpu.gyro.y  
-      int16_t   gyro_z;      // mpu.gyro.z
-      int16_t   accel_x;     // mpu.accel.x
-      int16_t   accel_y;     // mpu.accel.y
-      int16_t   accel_z;     // mpu.accel.z
-      int16_t   quat_w;      // mpu.quat.w
-      int16_t   quat_x;      // mpu.quat.x
-      int16_t   quat_y;      // mpu.quat.y
-      int16_t   quat_z;      // mpu.quat.z
-      int16_t   euler_pitch; // mpu.euler.pitch
-      int16_t   euler_roll;  // mpu.euler.roll
+      int16_t   gyro_x;      
+      int16_t   gyro_y;     
+      int16_t   gyro_z;     
+      int16_t   accel_x;     
+      int16_t   accel_y;     
+      int16_t   accel_z;     
+      int16_t   quat_w;      
+      int16_t   quat_x;      
+      int16_t   quat_y;      
+      int16_t   quat_z;     
+      int16_t   euler_pitch; 
+      int16_t   euler_roll;  
       int16_t   euler_yaw;  
       int16_t   temperature; 
       uint16_t  sensors;    
       uint16_t  checksum;
-    } SerialSideboard;
+    }__attribute__((__packed__)) SerialSideboardImuRaw;
 
 #endif
 
@@ -116,7 +116,7 @@ void usart_process_debug(uint8_t *userCommand, uint32_t len);
 void usart_process_command(SerialCommand *command_in, SerialCommand *command_out, uint8_t usart_idx);
 #endif
 #if defined(SIDEBOARD_SERIAL_USART2) || defined(SIDEBOARD_SERIAL_USART3)
-void usart_process_sideboard(SerialSideboard *Sideboard_in, SerialSideboard *Sideboard_out, uint8_t usart_idx);
+void usart_process_sideboard(SerialSideboardImuRaw *Sideboard_in, SerialSideboardImuRaw *Sideboard_out, uint8_t usart_idx);
 #endif
 
 // Sideboard functions

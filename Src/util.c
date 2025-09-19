@@ -149,8 +149,8 @@ static uint16_t timeoutCntSerial_L = SERIAL_TIMEOUT;  // Timeout counter for Rx 
 static uint8_t  timeoutFlgSerial_L = 0;               // Timeout Flag for Rx Serial command: 0 = OK, 1 = Problem detected (line disconnected or wrong Rx data)
 #endif
 #if defined(SIDEBOARD_SERIAL_USART2)
-SerialSideboard Sideboard_L;
-SerialSideboard Sideboard_L_raw;
+SerialSideboardImuRaw Sideboard_L;
+SerialSideboardImuRaw Sideboard_L_raw;
 static uint32_t Sideboard_L_len = sizeof(Sideboard_L);
 #endif
 
@@ -163,8 +163,8 @@ static uint16_t timeoutCntSerial_R = SERIAL_TIMEOUT;  // Timeout counter for Rx 
 static uint8_t  timeoutFlgSerial_R = 0;               // Timeout Flag for Rx Serial command: 0 = OK, 1 = Problem detected (line disconnected or wrong Rx data)
 #endif
 #if defined(SIDEBOARD_SERIAL_USART3)
-SerialSideboard Sideboard_R;
-SerialSideboard Sideboard_R_raw;
+SerialSideboardImuRaw Sideboard_R;
+SerialSideboardImuRaw Sideboard_R_raw;
 static uint32_t Sideboard_R_len = sizeof(Sideboard_R);
 #endif
 
@@ -884,8 +884,8 @@ void readInputRaw(void) {
 
     #if defined(SIDEBOARD_SERIAL_USART2)
     if (inIdx == SIDEBOARD_SERIAL_USART2) {
-      input1[inIdx].raw = Sideboard_L.cmd1;
-      input2[inIdx].raw = Sideboard_L.cmd2;
+      // input1[inIdx].raw = Sideboard_L.cmd1;
+      // input2[inIdx].raw = Sideboard_L.cmd2;
     }
     #endif
     #if defined(SIDEBOARD_SERIAL_USART3)
@@ -1145,6 +1145,7 @@ void usart2_rx_check(void)
       usart_process_sideboard(&Sideboard_L_raw, &Sideboard_L, 2);       // Process data
     }
   }
+
   #endif // SIDEBOARD_SERIAL_USART2
 
   #if defined(DEBUG_SERIAL_USART2) || defined(CONTROL_SERIAL_USART2) || defined(SIDEBOARD_SERIAL_USART2)
@@ -1298,7 +1299,7 @@ void usart_process_command(SerialCommand *command_in, SerialCommand *command_out
  * - if the Sideboard_in data is valid (correct START_FRAME and checksum) copy the Sideboard_in to Sideboard_out
  */
 #if defined(SIDEBOARD_SERIAL_USART2) || defined(SIDEBOARD_SERIAL_USART3)
-void usart_process_sideboard(SerialSideboard *Sideboard_in, SerialSideboard *Sideboard_out, uint8_t usart_idx)
+void usart_process_sideboard(SerialSideboardImuRaw *Sideboard_in, SerialSideboardImuRaw *Sideboard_out, uint8_t usart_idx)
 {
   uint16_t checksum;
   if (Sideboard_in->start == SERIAL_START_FRAME) {
@@ -1310,7 +1311,7 @@ void usart_process_sideboard(SerialSideboard *Sideboard_in, SerialSideboard *Sid
             Sideboard_in->accel_x ^ Sideboard_in->accel_y ^ Sideboard_in->accel_z ^
             Sideboard_in->quat_w ^ Sideboard_in->quat_x ^ Sideboard_in->quat_y ^ Sideboard_in->quat_z ^
             Sideboard_in->euler_pitch ^ Sideboard_in->euler_roll ^ Sideboard_in->euler_yaw ^
-            Sideboard_in->temperature ^ Sideboard_in->sensors 
+            Sideboard_in->temperature ^ Sideboard_in->sensors
     );
     if (Sideboard_in->checksum == checksum) {
       *Sideboard_out = *Sideboard_in;
