@@ -226,7 +226,6 @@ static uint8_t standstillAcv = 0;
   #endif
 #endif
 
- 
 /* =========================== Initialization Functions =========================== */
 
 void BLDC_Init(void) {
