@@ -1308,7 +1308,8 @@ void usart_process_sideboard(SerialSideboardImuRaw *Sideboard_in, SerialSideboar
             Sideboard_in->pitch ^ Sideboard_in->dPitch ^
             Sideboard_in->gyro_x ^ Sideboard_in->gyro_y ^ Sideboard_in->gyro_z ^
             Sideboard_in->accel_x ^ Sideboard_in->accel_y ^ Sideboard_in->accel_z ^
-            Sideboard_in->quat_w ^ Sideboard_in->quat_x ^ Sideboard_in->quat_y ^ Sideboard_in->quat_z ^
+            Sideboard_in->quat_w_low ^ Sideboard_in->quat_x_low ^ Sideboard_in->quat_y_low ^ Sideboard_in->quat_z_low ^
+            Sideboard_in->quat_w_high ^ Sideboard_in->quat_x_high ^ Sideboard_in->quat_y_high ^ Sideboard_in->quat_z_high ^
             Sideboard_in->euler_pitch ^ Sideboard_in->euler_roll ^ Sideboard_in->euler_yaw ^
             Sideboard_in->temperature ^ Sideboard_in->sensors
     );

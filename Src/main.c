@@ -125,21 +125,25 @@ typedef struct{
   int16_t   speedL_meas;
   int16_t   batVoltage;
   int16_t   boardTemp;
-  int16_t   gyro_x;      // mpu.gyro.x
-  int16_t   gyro_y;      // mpu.gyro.y  
-  int16_t   gyro_z;      // mpu.gyro.z
-  int16_t   accel_x;     // mpu.accel.x
-  int16_t   accel_y;     // mpu.accel.y
-  int16_t   accel_z;     // mpu.accel.z
-  int16_t   quat_w;      // mpu.quat.w
-  int16_t   quat_x;      // mpu.quat.x
-  int16_t   quat_y;      // mpu.quat.y
-  int16_t   quat_z;      // mpu.quat.z
-  int16_t   euler_pitch; // mpu.euler.pitch
-  int16_t   euler_roll;  // mpu.euler.roll
-  int16_t   euler_yaw;   // mpu.euler.yaw
-  int16_t   temperature; // mpu.temp
-  uint16_t  sensors;    // sensor status
+  int16_t   gyro_x;      
+  int16_t   gyro_y;       
+  int16_t   gyro_z;      
+  int16_t   accel_x;     
+  int16_t   accel_y;     
+  int16_t   accel_z;     
+  int16_t   quat_w_low; 
+  int16_t   quat_w_high; 
+  int16_t   quat_x_low;     
+  int16_t   quat_x_high;   
+  int16_t   quat_y_low;   
+  int16_t   quat_y_high;
+  int16_t   quat_z_low;   
+  int16_t   quat_z_high;   
+  int16_t   euler_pitch; 
+  int16_t   euler_roll;  
+  int16_t   euler_yaw;   
+  int16_t   temperature; 
+  uint16_t  sensors;    
   uint16_t  cmdLed;
   uint16_t  checksum;
 } SerialFeedback;
@@ -365,16 +369,22 @@ int main(void) {
         Feedback.batVoltage	    = (int16_t)batVoltageCalib;
         Feedback.boardTemp	    = (int16_t)board_temp_deg_c;
 
-        Feedback.gyro_x           = (int16_t)Sideboard_L.gyro_x;
-        Feedback.gyro_y           = (int16_t)Sideboard_L.gyro_y;
-        Feedback.gyro_z           = (int16_t)Sideboard_L.gyro_z;
-        Feedback.accel_x          = (int16_t)Sideboard_L.accel_x;
-        Feedback.accel_y          = (int16_t)Sideboard_L.accel_y;
-        Feedback.accel_z          = (int16_t)Sideboard_L.accel_z;
-        Feedback.quat_w           = (int16_t)Sideboard_L.quat_w;
-        Feedback.quat_x           = (int16_t)Sideboard_L.quat_x;
-        Feedback.quat_y           = (int16_t)Sideboard_L.quat_y;
-        Feedback.quat_z           = (int16_t)Sideboard_L.quat_z;
+        Feedback.gyro_x         = (int16_t)Sideboard_L.gyro_x;
+        Feedback.gyro_y         = (int16_t)Sideboard_L.gyro_y;
+        Feedback.gyro_z         = (int16_t)Sideboard_L.gyro_z;
+        Feedback.accel_x        = (int16_t)Sideboard_L.accel_x;
+        Feedback.accel_y        = (int16_t)Sideboard_L.accel_y;
+        Feedback.accel_z        = (int16_t)Sideboard_L.accel_z;
+
+        Feedback.quat_w_low     = (int16_t)Sideboard_L.quat_w_low;
+        Feedback.quat_w_high    = (int16_t)Sideboard_L.quat_w_high;
+        Feedback.quat_x_low     = (int16_t)Sideboard_L.quat_x_low;
+        Feedback.quat_x_high    = (int16_t)Sideboard_L.quat_x_high;
+        Feedback.quat_y_low     = (int16_t)Sideboard_L.quat_y_low;
+        Feedback.quat_y_high    = (int16_t)Sideboard_L.quat_y_high;
+        Feedback.quat_z_low     = (int16_t)Sideboard_L.quat_z_low;
+        Feedback.quat_z_high    = (int16_t)Sideboard_L.quat_z_high;
+
         Feedback.euler_pitch      = (int16_t)Sideboard_L.euler_pitch;
         Feedback.euler_roll       = (int16_t)Sideboard_L.euler_roll;
         Feedback.euler_yaw        = (int16_t)Sideboard_L.euler_yaw;
@@ -403,7 +413,8 @@ int main(void) {
                                            ^ Feedback.batVoltage ^ Feedback.boardTemp 
                                            ^ Feedback.gyro_x  ^ Feedback.gyro_y ^ Feedback.gyro_z   
                                            ^ Feedback.accel_x ^ Feedback.accel_y ^  Feedback.accel_z 
-                                           ^ Feedback.quat_w  ^ Feedback.quat_x ^  Feedback.quat_y ^ Feedback.quat_z      
+                                           ^ Feedback.quat_w_low  ^ Feedback.quat_x_low ^  Feedback.quat_y_low ^ Feedback.quat_z_low   
+                                           ^ Feedback.quat_w_high  ^ Feedback.quat_x_high ^  Feedback.quat_y_high ^ Feedback.quat_z_high   
                                            ^ Feedback.euler_pitch ^ Feedback.euler_roll ^  Feedback.euler_yaw  
                                            ^ Feedback.temperature ^ Feedback.sensors ^ Feedback.cmdLed
                                           );
