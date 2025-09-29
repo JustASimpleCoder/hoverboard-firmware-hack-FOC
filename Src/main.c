@@ -131,13 +131,13 @@ typedef struct{
   int16_t   accel_x;     
   int16_t   accel_y;     
   int16_t   accel_z;     
-  int16_t   quat_w_low; 
+  uint16_t   quat_w_low; 
   int16_t   quat_w_high; 
-  int16_t   quat_x_low;     
+  uint16_t   quat_x_low;     
   int16_t   quat_x_high;   
-  int16_t   quat_y_low;   
+  uint16_t   quat_y_low;   
   int16_t   quat_y_high;
-  int16_t   quat_z_low;   
+  uint16_t   quat_z_low;   
   int16_t   quat_z_high;   
   int16_t   euler_pitch; 
   int16_t   euler_roll;  
@@ -376,13 +376,13 @@ int main(void) {
         Feedback.accel_y        = (int16_t)Sideboard_L.accel_y;
         Feedback.accel_z        = (int16_t)Sideboard_L.accel_z;
 
-        Feedback.quat_w_low     = (int16_t)Sideboard_L.quat_w_low;
+        Feedback.quat_w_low     = (uint16_t)Sideboard_L.quat_w_low;
         Feedback.quat_w_high    = (int16_t)Sideboard_L.quat_w_high;
-        Feedback.quat_x_low     = (int16_t)Sideboard_L.quat_x_low;
+        Feedback.quat_x_low     = (uint16_t)Sideboard_L.quat_x_low;
         Feedback.quat_x_high    = (int16_t)Sideboard_L.quat_x_high;
-        Feedback.quat_y_low     = (int16_t)Sideboard_L.quat_y_low;
+        Feedback.quat_y_low     = (uint16_t)Sideboard_L.quat_y_low;
         Feedback.quat_y_high    = (int16_t)Sideboard_L.quat_y_high;
-        Feedback.quat_z_low     = (int16_t)Sideboard_L.quat_z_low;
+        Feedback.quat_z_low     = (uint16_t)Sideboard_L.quat_z_low;
         Feedback.quat_z_high    = (int16_t)Sideboard_L.quat_z_high;
 
         Feedback.euler_pitch      = (int16_t)Sideboard_L.euler_pitch;
@@ -390,7 +390,6 @@ int main(void) {
         Feedback.euler_yaw        = (int16_t)Sideboard_L.euler_yaw;
         Feedback.temperature      = (int16_t)Sideboard_L.temperature;
         Feedback.sensors          = (int16_t)Sideboard_L.sensors; 
-
 
         #if defined(FEEDBACK_SERIAL_USART2)
           if(__HAL_DMA_GET_COUNTER(huart2.hdmatx) == 0) {

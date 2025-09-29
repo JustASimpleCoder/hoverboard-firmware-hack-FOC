@@ -1155,7 +1155,6 @@ void usart2_rx_check(void)
 	#endif
 }
 
-
 /*
  * Check for new data received on USART3 with DMA: refactored function from https://github.com/MaJerle/stm32-usart-uart-dma-rx-tx
  * - this function is called for every USART IDLE line detection, in the USART interrupt handler
