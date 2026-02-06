@@ -875,8 +875,8 @@ void readInputRaw(void) {
         input1[inIdx].raw = (ibusR_captured_value[0] - 500) * 2;
         input2[inIdx].raw = (ibusR_captured_value[1] - 500) * 2; 
       #else
-        input1[inIdx].raw = commandR.steer;
-        input2[inIdx].raw = commandR.speed;
+        input1[inIdx].raw = commandR.lSpeed;
+        input2[inIdx].raw = commandR.rSpeed;
       #endif
     }
     #endif
@@ -1272,7 +1272,7 @@ void usart_process_command(SerialCommand *command_in, SerialCommand *command_out
   #else
   uint16_t checksum;
   if (command_in->start == SERIAL_START_FRAME) {
-    checksum = (uint16_t)(command_in->start ^ command_in->steer ^ command_in->speed);
+    checksum = (uint16_t)(command_in->start ^ command_in->lSpeed ^ command_in->rSpeed);
     if (command_in->checksum == checksum) {
       *command_out = *command_in;
       if (usart_idx == 2) {             // Sideboard USART2
@@ -1692,25 +1692,36 @@ void rateLimiter16(int16_t u, int16_t rate, int16_t *y) {
   * Outputs:      rty_speedR, rty_speedL                = int16_t
   * Parameters:   SPEED_COEFFICIENT, STEER_COEFFICIENT  = fixdt(0,16,14)
   */
-void mixerFcn(int16_t rtu_speed, int16_t rtu_steer, int16_t *rty_speedR, int16_t *rty_speedL) {
-    int16_t prodSpeed;
-    int16_t prodSteer;
-    int32_t tmp;
+// void mixerFcn(int16_t rtu_speed, int16_t rtu_steer, int16_t *rty_speedR, int16_t *rty_speedL) {
+//     int16_t prodSpeed;
+//     int16_t prodSteer;
+//     int32_t tmp;
 
-    prodSpeed   = (int16_t)((rtu_speed * (int16_t)SPEED_COEFFICIENT) >> 14);
-    prodSteer   = (int16_t)((rtu_steer * (int16_t)STEER_COEFFICIENT) >> 14);
+//     prodSpeed   = (int16_t)((rtu_speed * (int16_t)SPEED_COEFFICIENT) >> 14);
+//     prodSteer   = (int16_t)((rtu_steer * (int16_t)STEER_COEFFICIENT) >> 14);
 
-    tmp         = prodSpeed - prodSteer;  
-    tmp         = CLAMP(tmp, -32768, 32767);  // Overflow protection
-    *rty_speedR = (int16_t)(tmp >> 4);        // Convert from fixed-point to int 
-    *rty_speedR = CLAMP(*rty_speedR, INPUT_MIN, INPUT_MAX);
+//     tmp         = prodSpeed - prodSteer;  
+//     tmp         = CLAMP(tmp, -32768, 32767);  // Overflow protection
+//     *rty_speedR = (int16_t)(tmp >> 4);        // Convert from fixed-point to int 
+//     *rty_speedR = CLAMP(*rty_speedR, INPUT_MIN, INPUT_MAX);
 
-    tmp         = prodSpeed + prodSteer;
-    tmp         = CLAMP(tmp, -32768, 32767);  // Overflow protection
-    *rty_speedL = (int16_t)(tmp >> 4);        // Convert from fixed-point to int
-    *rty_speedL = CLAMP(*rty_speedL, INPUT_MIN, INPUT_MAX);
+//     tmp         = prodSpeed + prodSteer;
+//     tmp         = CLAMP(tmp, -32768, 32767);  // Overflow protection
+//     *rty_speedL = (int16_t)(tmp >> 4);        // Convert from fixed-point to int
+//     *rty_speedL = CLAMP(*rty_speedL, INPUT_MIN, INPUT_MAX);
+// }
+
+
+void clampWheelCMD( int16_t rSpeed, int16_t lSpeed, int16_t *rty_speedR, int16_t *rty_speedL){
+  int16_t prodSpeedL;
+  int16_t prodSpeedR;
+
+  prodSpeedL = (int16_t)((lSpeed * (int16_t)SPEED_COEFFICIENT) >> 14);
+  prodSpeedR = (int16_t)((rSpeed * (int16_t)SPEED_COEFFICIENT) >> 14);
+
+  *rty_speedL = (int16_t)CLAMP(prodSpeedL << 4, INPUT_MIN << 4, INPUT_MAX << 4);
+  *rty_speedR = (int16_t)CLAMP(prodSpeedR << 4, INPUT_MIN << 4, INPUT_MAX << 4);
 }
-
 
 
 /* =========================== Multiple Tap Function =========================== */

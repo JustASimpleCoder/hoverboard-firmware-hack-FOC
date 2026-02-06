@@ -37,8 +37,8 @@
   #else
     typedef struct{
       uint16_t  start;
-      int16_t   steer;
-      int16_t   speed;
+      int16_t   lSpeed;
+      int16_t   rSpeed;
       uint16_t  checksum;
     } SerialCommand;
   #endif
@@ -135,8 +135,7 @@ void poweroffPressCheck(void);
 // Filtering Functions
 void filtLowPass32(int32_t u, uint16_t coef, int32_t *y);
 void rateLimiter16(int16_t u, int16_t rate, int16_t *y);
-void mixerFcn(int16_t rtu_speed, int16_t rtu_steer, int16_t *rty_speedR, int16_t *rty_speedL);
-
+void clampWheelCMD( int16_t rSpeed, int16_t lSpeed, int16_t *rty_speedR, int16_t *rty_speedL);
 // Multiple Tap Function
 typedef struct {
   uint32_t  t_timePrev;

@@ -35,6 +35,8 @@
 #include "hd44780.h"
 #endif
 
+int main(void);
+
 void SystemClock_Config(void);
 
 //------------------------------------------------------------------------
@@ -168,13 +170,24 @@ static uint8_t sideboard_leds_R;
   static uint16_t transpotter_counter = 0;
 #endif
 
-static int16_t    speed;                // local variable for speed. -1000 to 1000
+// static int16_t    speed;                // local variable for speed. -1000 to 1000
+static int16_t    lSpeed;
+static int16_t    rSpeed;
+
 #ifndef VARIANT_TRANSPOTTER
-  static int16_t  steer;                // local variable for steering. -1000 to 1000
-  static int16_t  steerRateFixdt;       // local fixed-point variable for steering rate limiter
-  static int16_t  speedRateFixdt;       // local fixed-point variable for speed rate limiter
-  static int32_t  steerFixdt;           // local fixed-point variable for steering low-pass filter
-  static int32_t  speedFixdt;           // local fixed-point variable for speed low-pass filter
+//  static int16_t  steer;                // local variable for steering. -1000 to 1000
+  // static int16_t  steerRateFixdt;       // local fixed-point variable for steering rate limiter
+  // static int16_t  speedRateFixdt;       // local fixed-point variable for speed rate limiter
+
+  static int16_t  lSpeedRatefixdt;
+  static int16_t  rSpeedRatefixdt;
+
+  // static int32_t  steerFixdt;           // local fixed-point variable for steering low-pass filter
+  // static int32_t  speedFixdt;           // local fixed-point variable for speed low-pass filter
+
+  static int32_t  lSpeedFixdt;           
+  static int32_t  rSpeedFixdt;           
+
 #endif
 
 static uint32_t    buzzerTimer_prev = 0;
@@ -279,7 +292,7 @@ int main(void) {
           ABS(input1[inIdx].cmd) < 50 && ABS(input2[inIdx].cmd) < 50){
         beepShort(6);                     // make 2 beeps indicating the motor enable
         beepShort(4); HAL_Delay(100);
-        steerFixdt = speedFixdt = 0;      // reset filters
+        lSpeedFixdt = rSpeedFixdt = 0;      // reset filters
         enable = 1;                       // enable motors
         #if defined(DEBUG_SERIAL_USART2) || defined(DEBUG_SERIAL_USART3)
         printf("-- Motors enabled --\r\n");
@@ -287,16 +300,20 @@ int main(void) {
       }
 
       // ####### LOW-PASS FILTER #######
-      rateLimiter16(input1[inIdx].cmd, rate, &steerRateFixdt);
-      rateLimiter16(input2[inIdx].cmd, rate, &speedRateFixdt);
-      filtLowPass32(steerRateFixdt >> 4, FILTER, &steerFixdt);
-      filtLowPass32(speedRateFixdt >> 4, FILTER, &speedFixdt);
-      steer = (int16_t)(steerFixdt >> 16);  // convert fixed-point to integer
-      speed = (int16_t)(speedFixdt >> 16);  // convert fixed-point to integer
+      rateLimiter16(input1[inIdx].cmd, rate, &lSpeedRatefixdt); //want
+      rateLimiter16(input2[inIdx].cmd, rate, &rSpeedRatefixdt); //want
 
+      filtLowPass32(lSpeedRatefixdt >> 4, FILTER, &lSpeedFixdt); //want
+      filtLowPass32(rSpeedRatefixdt >> 4, FILTER, &rSpeedFixdt); //want
+
+      lSpeed = (int16_t)(lSpeedFixdt >> 16);  // want
+      rSpeed = (int16_t)(rSpeedFixdt >> 16);  //want
+
+
+      clampWheelCMD(rSpeed, lSpeed, &cmdR, &cmdL);
 
         // ####### MIXER #######
-      mixerFcn(speed << 4, steer << 4, &cmdR, &cmdL);   // This function implements the equations above
+      // mixerFcn(speed << 4, steer << 4, &cmdR, &cmdL); 
   
       // ####### SET OUTPUTS (if the target change is less than +/- 100) #######
       #ifdef INVERT_R_DIRECTION
@@ -362,8 +379,8 @@ int main(void) {
     #if defined(FEEDBACK_SERIAL_USART2) || defined(FEEDBACK_SERIAL_USART3)
       if (main_loop_counter % 2 == 0) {    // Send data periodically every 10 ms
         Feedback.start	        = (uint16_t)SERIAL_START_FRAME;
-        Feedback.cmd1           = (int16_t)input1[inIdx].cmd;
-        Feedback.cmd2           = (int16_t)input2[inIdx].cmd;
+        Feedback.cmd1           = (int16_t)input1[inIdx].cmd; //lefet wheel
+        Feedback.cmd2           = (int16_t)input2[inIdx].cmd; //right wheel
         Feedback.speedR_meas	  = (int16_t)-rtY_Right.n_mot; // needs to be negative, to match coordinate system of ros 
         Feedback.speedL_meas	  = (int16_t)rtY_Left.n_mot;
         Feedback.batVoltage	    = (int16_t)batVoltageCalib;
