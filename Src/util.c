@@ -1719,8 +1719,8 @@ void clampWheelCMD( int16_t rSpeed, int16_t lSpeed, int16_t *rty_speedR, int16_t
   prodSpeedL = (int16_t)((lSpeed * (int16_t)SPEED_COEFFICIENT) >> 14);
   prodSpeedR = (int16_t)((rSpeed * (int16_t)SPEED_COEFFICIENT) >> 14);
 
-  *rty_speedL = (int16_t)CLAMP(prodSpeedL << 4, INPUT_MIN << 4, INPUT_MAX << 4);
-  *rty_speedR = (int16_t)CLAMP(prodSpeedR << 4, INPUT_MIN << 4, INPUT_MAX << 4);
+  *rty_speedL = (int16_t)CLAMP(prodSpeedL >> 4, INPUT_MIN, INPUT_MAX);
+  *rty_speedR = (int16_t)CLAMP(prodSpeedR >> 4, INPUT_MIN, INPUT_MAX);
 }
 
 
