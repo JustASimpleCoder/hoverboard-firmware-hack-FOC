@@ -115,8 +115,8 @@ int16_t dc_curr;                 // global variable for Total DC Link current
 int16_t cmdL;                    // global variable for Left Command 
 int16_t cmdR;                    // global variable for Right Command 
 
-int16_t rSpeedScale = 1;
-int16_t lSpeedScale = 1;
+int16_t rSpeedScale = 10;
+int16_t lSpeedScale = 10;
 
 //------------------------------------------------------------------------
 // Local variables
